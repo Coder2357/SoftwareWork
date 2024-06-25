@@ -1,35 +1,58 @@
 import pandas as pd
 from influxdb import InfluxDBClient
-from sklearn.ensemble import IsolationForest
-from prophet import Prophet
 
-# 连接InfluxDB
+# 连接 InfluxDB
 client = InfluxDBClient(host='localhost', port=8086)
 client.switch_database('metrics')
 
-# 查询数据
-results = client.query('SELECT * FROM cpu_usage')
+# 查询数据（假设使用 node_cpu_seconds_total）
+results = client.query('SELECT * FROM node_cpu_seconds_total')
 points = list(results.get_points())
 
-# 转换为DataFrame
+# 转换为 DataFrame
 df = pd.DataFrame(points)
 
 # 数据清洗
 df.dropna(inplace=True)
 df = df[df['value'] >= 0]
 
-# 异常检测
-model = IsolationForest(contamination=0.01)
-model.fit(df[['value']])
-df['anomaly'] = model.predict(df[['value']])
+# 选择列
+# df = df[['time', 'cpu', 'instance', 'mode', 'value']]
 
-# 时间序列预测
-df['timestamp'] = pd.to_datetime(df['time'])
-df_prophet = df[['timestamp', 'value']].rename(columns={'timestamp': 'ds', 'value': 'y'})
-prophet_model = Prophet()
-prophet_model.fit(df_prophet)
-future = prophet_model.make_future_dataframe(periods=60)
-forecast = prophet_model.predict(future)
+# # 将 time 列转换为 datetime 类型
+# df['time'] = pd.to_datetime(df['time']).dt.tz_localize(None)
 
-# 保存预测结果
-forecast.to_csv('forecast.csv', index=False)
+# # 设置索引
+# df.set_index('time', inplace=True)
+
+# # 计算每个 instance 每分钟的 increase 值
+# df = df.groupby(['instance', 'cpu', 'mode']).resample('1T').mean().diff().reset_index()
+
+# # 过滤掉不需要的 mode
+# idle_df = df[df['mode'] == 'idle']
+# total_df = df.groupby(['time', 'instance'])['value'].sum().reset_index()
+
+# # 合并 idle 和 total
+# merged_df = pd.merge(total_df, idle_df, on=['time', 'instance'], suffixes=('_total', '_idle'))
+
+# # 计算 CPU 使用率
+# merged_df['cpu_usage'] = (1 - (merged_df['value_idle'] / merged_df['value_total'])) * 100
+
+# # 准备写入 InfluxDB 的数据
+# json_body = []
+# for _, row in merged_df.iterrows():
+#     json_body.append({
+#         "measurement": "cpu_usage",
+#         "tags": {
+#             "instance": row['instance']
+#         },
+#         "time": row['time'],
+#         "fields": {
+#             "cpu_usage": row['cpu_usage']
+#         }
+#     })
+
+# # 写入数据到 InfluxDB
+# client.write_points(json_body)
+
+print("CPU Usage data written to InfluxDB.")

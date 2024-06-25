@@ -1,7 +1,8 @@
 version: '3.7'
+
 services:
   flask-app:
-    build: ./flask-app
+    build: ./flask
     ports:
       - "5000:5000"
 
@@ -22,4 +23,23 @@ services:
     ports:
       - "8086:8086"
     volumes:
-      - ./influxdb:/var/lib/influxdb
+      - ./InfluxDB:/var/lib/influxdb
+      - ./sh/init-influxdb.sh:/etc/influxdb/init-influxdb.sh
+    command: ["sh", "/etc/influxdb/init-influxdb.sh"]
+
+  grafana:
+    image: grafana/grafana:10.2.2
+    ports:
+      - "3000:3000"
+    depends_on:
+      - influxdb
+    volumes:
+      - ./data/grafana:/var/lib/grafana
+      - ./configs/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
+      - ./configs/dashboard.yml:/etc/grafana/provisioning/dashboards/dashboard.yml
+      - ./json/dashboard.json:/etc/grafana/provisioning/dashboards/dashboard.json
+      - ./sh/init-grafana.sh:/etc/grafana/init-grafana.sh
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    entrypoint: ["sh", "/etc/grafana/init-grafana.sh"]

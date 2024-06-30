@@ -1,0 +1,4 @@
+InfluxDB
+data
+scripts/__pycache__
+*.csv

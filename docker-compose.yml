@@ -1,0 +1,49 @@
+version: '3.7'
+
+services:
+  flask_app:
+    build:
+      context: .
+      dockerfile: flask/Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./scripts:/app/scripts
+      - ./flask:/app/flask
+      - ./configs:/app/configs
+      - ./json:/app/json
+    command: ["python", "flask/app.py"]
+
+  prometheus:
+    image: prom/prometheus:v2.52.0
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+
+  node-exporter:
+    image: prom/node-exporter:v1.8.0
+    ports:
+      - "9100:9100"
+
+  influxdb:
+    image: influxdb:2.0
+    ports:
+      - "8086:8086"
+    volumes:
+      - ./InfluxDB:/var/lib/influxdb
+
+  grafana:
+    image: grafana/grafana:10.2.2
+    ports:
+      - "3000:3000"
+    depends_on:
+      - influxdb
+    volumes:
+      - ./data/grafana:/var/lib/grafana
+      - ./configs/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
+      - ./configs/dashboard.yml:/etc/grafana/provisioning/dashboards/dashboard.yml
+      - ./json/dashboard.json:/etc/grafana/provisioning/dashboards/dashboard.json
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin

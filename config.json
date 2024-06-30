@@ -1,0 +1,5 @@
+{
+    "grafana_api_key": "YOUR_API_KEY",
+    "influxdb_api_key": "YOUR_API_KEY",
+    "influxdb_org": "YOUR_ORG"
+}

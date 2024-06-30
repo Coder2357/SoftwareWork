@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CPU Stress Test</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#toggleButton').click(function() {
+                $.post('/start_stop_stress', function(data) {
+                    if (data.status === "started") {
+                        $('#toggleButton').text('停止CPU压力测试');
+                    } else {
+                        $('#toggleButton').text('开始CPU压力测试');
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>CPU Stress Test</h1>
+    <button id="toggleButton">开始CPU压力测试</button>
+</body>
+</html>

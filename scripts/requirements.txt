@@ -2,3 +2,6 @@ pandas
 influxdb
 scikit-learn
 prophet
+requests
+influxdb-client
+schedule

@@ -1,4 +1,0 @@
-{
-    "grafana_api_key": "YOUR_GRAFANA_API_KEY",
-    "grafana_url": "http://localhost:3000/api/ruler/grafana/api/v1/rules/namespace"
-}

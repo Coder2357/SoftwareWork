@@ -1,4 +1,4 @@
-# TEST用于查询对应数据
+# test.py 用于查询对应数据
 
 import pandas as pd
 from influxdb import InfluxDBClient

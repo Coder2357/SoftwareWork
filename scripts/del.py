@@ -1,4 +1,4 @@
-# 删除所有数据，用于调试db用，慎用
+# del.py 删除所有数据，用于调试db用，慎用
 import json
 from influxdb_client import InfluxDBClient
 from datetime import datetime

@@ -1,1 +1,0 @@
-# TODO : analize the data

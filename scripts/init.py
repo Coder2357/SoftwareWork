@@ -1,3 +1,5 @@
+# init.py 初始化内容
+
 import json
 import requests
 import subprocess

@@ -1,24 +1,40 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>CPU Stress Test</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('#toggleButton').click(function() {
-                $.post('/start_stop_stress', function(data) {
-                    if (data.status === "started") {
-                        $('#toggleButton').text('停止CPU压力测试');
-                    } else {
-                        $('#toggleButton').text('开始CPU压力测试');
-                    }
-                });
-            });
-        });
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stress Test</title>
+    <script>
+        function sendRequest(url) {
+            fetch(url, { method: 'POST' })
+                .then(response => response.text())
+                .then(data => alert(data))
+                .catch(error => console.error('Error:', error));
+        }
+
+        function startCpuTest() {
+            sendRequest('/start_cpu_test');
+        }
+
+        function stopCpuTest() {
+            sendRequest('/stop_cpu_test');
+        }
+
+        function startMemoryTest() {
+            sendRequest('/start_memory_test');
+        }
+
+        function stopMemoryTest() {
+            sendRequest('/stop_memory_test');
+        }
     </script>
 </head>
 <body>
-    <h1>CPU Stress Test</h1>
-    <button id="toggleButton">开始CPU压力测试</button>
+    <h1>Stress Test</h1>
+    <button onclick="startCpuTest()">Start CPU Test</button>
+    <button onclick="stopCpuTest()">Stop CPU Test</button>
+    <br><br>
+    <button onclick="startMemoryTest()">Start Memory Test</button>
+    <button onclick="stopMemoryTest()">Stop Memory Test</button>
 </body>
 </html>

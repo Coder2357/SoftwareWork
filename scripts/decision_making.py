@@ -6,7 +6,6 @@ with open('../config.json', 'r') as f:
 
 cpu_threshold = config['cpu_threshold']
 memory_threshold = config['memory_threshold']
-disk_threshold = config['disk_threshold']
 
 def scale_up():
     print("Scaling up resources...")

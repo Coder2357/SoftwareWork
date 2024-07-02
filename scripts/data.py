@@ -30,6 +30,7 @@ def get_metric(promql_query_template):
     return metric_value
 
 def get_data():
+    collected_data = {}
     try:
         print("Data collection started...")
         client = InfluxDBClient(url=influxdb_url, token=influxdb_api_key, org=influxdb_org)
@@ -39,34 +40,42 @@ def get_data():
         cpu_usage = get_metric(promql_query_cpu_template)
         if cpu_usage is not None:
             write_to_influxdb(client, influxdb_bucket, influxdb_org, "cpu_usage", {"usage": cpu_usage})
+            collected_data["CPU Usage"] = cpu_usage
 
         # 内存使用率
         print("Collecting memory utilization data...")
         mem_usage = get_metric(promql_query_mem_template)
         if mem_usage is not None:
             write_to_influxdb(client, influxdb_bucket, influxdb_org, "memory_usage", {"usage": mem_usage})
+            collected_data["Memory Usage"] = mem_usage
 
         # 磁盘使用率
         print("Collecting disk utilization data...")
         disk_usage = get_metric(promql_query_disk_template)
         if disk_usage is not None:
             write_to_influxdb(client, influxdb_bucket, influxdb_org, "disk_usage", {"usage": disk_usage})
+            collected_data["Disk Usage"] = disk_usage
 
         # 网络接收速率
         print("Collecting network receive rate data...")
         net_receive_rate = get_metric(promql_query_net_receive_template)
         if net_receive_rate is not None:
             write_to_influxdb(client, influxdb_bucket, influxdb_org, "net_receive", {"rate": net_receive_rate})
+            collected_data["Network Receive Rate"] = net_receive_rate
 
         # 网络发送速率
         print("Collecting network transmit rate data...")
         net_transmit_rate = get_metric(promql_query_net_transmit_template)
         if net_transmit_rate is not None:
             write_to_influxdb(client, influxdb_bucket, influxdb_org, "net_transmit", {"rate": net_transmit_rate})
+            collected_data["Network Transmit Rate"] = net_transmit_rate
 
         print("Data collection completed.")
     except Exception as e:
         print(f"Error during data collection: {e}")
 
+    return collected_data
+
 if __name__ == '__main__':
-    get_data()
+    data = get_data()
+    print(data)

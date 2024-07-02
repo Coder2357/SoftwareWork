@@ -3,8 +3,9 @@ FROM python:3.8-slim
 WORKDIR /app
 
 COPY . .
-RUN pip install -r flask/requirements.txt
+RUN pip install --no-cache-dir -r flask/requirements.txt
 
-COPY scripts/cpu_stress.py /app/scripts/cpu_stress.py
+CMD ["python", "app.py"]
 
-CMD ["sh", "-c", "python app.py"]
+
+EXPOSE 5000

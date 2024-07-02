@@ -5,17 +5,24 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 def predict_usage(metric_name, history):
+
+    print(f"Predicting {metric_name}...")
+
     df = pd.DataFrame(history, columns=['y'])
-    df['ds'] = pd.date_range(start='2023-01-01', periods=len(history), freq='T')
+    df['ds'] = pd.date_range(start='2024-01-01', periods=len(history), freq='T')
     model = Prophet()
     model.fit(df)
     future = model.make_future_dataframe(periods=60, freq='T')
     forecast = model.predict(future)
+
+    print(f"Prediction completed for {metric_name}")
+
     return forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']]
+
 
 def plot_forecast(metric_name, history, forecast):
     plt.figure(figsize=(10, 6))
-    plt.plot(pd.date_range(start='2023-01-01', periods=len(history), freq='T'), history, label='Historical Data')
+    plt.plot(pd.date_range(start='2024-01-01', periods=len(history), freq='T'), history, label='Historical Data')
     plt.plot(forecast['ds'], forecast['yhat'], label='Predicted Data', color='blue')
     plt.fill_between(forecast['ds'], forecast['yhat_lower'], forecast['yhat_upper'], color='blue', alpha=0.2)
     plt.title(f'Forecast for {metric_name}')

@@ -9,12 +9,11 @@ with open('../config.json', 'r') as f:
     config = json.load(f)
     cpu_threshold = config['cpu_threshold']
     memory_threshold = config['memory_threshold']
-    disk_threshold = config['disk_threshold']
 
 def log_anomaly(metric_name, value, reason):
     log_message = f"{datetime.utcnow().isoformat()}: Anomaly detected in {metric_name}: {value}. Reason: {reason}"
     
-    # 记录到文件
+    # 记录日志
     with open('anomalies.log', 'a') as log_file:
         log_file.write(log_message + '\n')
     
@@ -40,6 +39,8 @@ def log_anomaly(metric_name, value, reason):
         print(f"Failed to send alert: {e}")
 
 def detect_anomaly(metric_name, values, threshold):
+    print(f"Detecting anomalies in {metric_name}...")
+
     values = np.array(values).reshape(-1, 1)
 
     # 基于模型的异常检测 bug : 边缘点
@@ -64,6 +65,8 @@ def detect_anomaly(metric_name, values, threshold):
     for i in range(1, len(values)):
         if values[i] > values[i - 1] * (1 + growth_threshold):
             log_anomaly(metric_name, values[i][0], reason="abnormal growth")
+    
+    print(f"Anomaly detection completed for {metric_name}")
 
 # 示例测试
 if __name__ == '__main__':

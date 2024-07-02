@@ -3,38 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stress Test</title>
-    <script>
-        function sendRequest(url) {
-            fetch(url, { method: 'POST' })
-                .then(response => response.text())
-                .then(data => alert(data))
-                .catch(error => console.error('Error:', error));
+    <title>Service Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #e0f7fa, #80deea);
+            color: #333;
         }
-
-        function startCpuTest() {
-            sendRequest('/start_cpu_test');
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            text-align: center;
         }
-
-        function stopCpuTest() {
-            sendRequest('/stop_cpu_test');
+        h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            font-weight: bold;
         }
-
-        function startMemoryTest() {
-            sendRequest('/start_memory_test');
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
         }
-
-        function stopMemoryTest() {
-            sendRequest('/stop_memory_test');
+        li {
+            margin-bottom: 20px;
         }
-    </script>
+        a {
+            text-decoration: none;
+            color: #ffffff;
+            background-color: #1a73e8;
+            padding: 12px 24px;
+            border-radius: 6px;
+            display: inline-block;
+            font-size: 18px;
+            transition: background-color 0.3s, transform 0.3s;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        a:hover {
+            background-color: #155abf;
+            transform: scale(1.05);
+        }
+        a:active {
+            background-color: #0d47a1;
+        }
+        .icon {
+            margin-right: 8px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Stress Test</h1>
-    <button onclick="startCpuTest()">Start CPU Test</button>
-    <button onclick="stopCpuTest()">Stop CPU Test</button>
-    <br><br>
-    <button onclick="startMemoryTest()">Start Memory Test</button>
-    <button onclick="stopMemoryTest()">Stop Memory Test</button>
+    <div class="container">
+        <h1>Service Dashboard</h1>
+        <ul>
+            <li><a href="http://localhost:9090" target="_blank"><i class="fas fa-database icon"></i>Prometheus</a></li>
+            <li><a href="http://localhost:9093" target="_blank"><i class="fas fa-bell icon"></i>Alertmanager</a></li>
+            <li><a href="http://localhost:3000" target="_blank"><i class="fas fa-chart-line icon"></i>Grafana</a></li>
+            <li><a href="http://localhost:9100" target="_blank"><i class="fas fa-server icon"></i>Node Exporter</a></li>
+            <li><a href="http://localhost:8086" target="_blank"><i class="fas fa-database icon"></i>InfluxDB</a></li>
+        </ul>
+    </div>
 </body>
 </html>
